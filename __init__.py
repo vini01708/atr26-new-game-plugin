@@ -43,6 +43,33 @@ def load(app):
     app.db.create_all()
     _migrate_db(app)
 
+    @app.before_request
+    def _block_attempt_if_unclaimed():
+        from flask import jsonify, request
+        if request.method != "POST" or not request.path.startswith("/api/v1/challenges/attempt"):
+            return
+        from CTFd.utils.user import get_current_user
+        from CTFd.utils.decorators import authed_only  # noqa — just check session directly
+        try:
+            user = get_current_user()
+        except Exception:
+            return
+        if not user:
+            return
+        team = user.team
+        if not team:
+            return
+        from .models import PendingCardOffer
+        unclaimed = PendingCardOffer.query.filter_by(team_id=team.id, selected=False).first()
+        if unclaimed:
+            return jsonify({
+                "success": True,
+                "data": {
+                    "status": "error",
+                    "message": "You have an unclaimed weapon! Claim it from your previous solve before attempting another challenge.",
+                },
+            }), 200
+
     _assets_bp = _BP(
         "atr26_game_static",
         __name__,
@@ -62,6 +89,8 @@ def load(app):
     from .blueprints.admin import admin_bp
     from .blueprints.api import api_bp
     from .blueprints.pages import pages_bp
+    from .hooks import register_solve_loot_hooks
+    register_solve_loot_hooks()
 
     app.register_blueprint(api_bp)
     app.register_blueprint(admin_bp)
