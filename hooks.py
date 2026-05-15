@@ -50,7 +50,7 @@ def register_solve_loot_hooks():
             if tier is None:
                 continue
 
-            weapons = session.query(Weapon).filter_by(enabled=True).all()
+            weapons = session.query(Weapon).all()
             if len(weapons) < 2:
                 continue
 

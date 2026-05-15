@@ -27,17 +27,17 @@
     <div class="card-body">
       <ul class="nav nav-tabs mb-3" id="catalogTabs">
         <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-seed-weapons">Seed weapons</button>
+          <button class="nav-link active" data-toggle="tab" data-target="#tab-seed-weapons">Seed weapons</button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-seed-challenges">Seed test challenges</button>
+          <button class="nav-link" data-toggle="tab" data-target="#tab-seed-challenges">Seed test challenges</button>
         </li>
       </ul>
       <div class="tab-content">
 
         <div class="tab-pane fade show active" id="tab-seed-weapons">
           <p>
-            Loot drops use all <strong>enabled</strong> weapons.
+            Loot drops use all weapons in the table.
             Tag challenges with <code class="text-danger">loot:easy</code>,
             <code class="text-danger">loot:medium</code>, or
             <code class="text-danger">loot:hard</code>
@@ -52,7 +52,7 @@
             <code class="text-danger">weapons_seed.json</code> (safe to re-run).
           </p>
           <button class="btn btn-primary" id="btn-seed-weapons">Run: Seed weapons</button>
-          <span class="ms-3 text-muted small" id="seed-weapons-result"></span>
+          <span class="ml-3 text-muted small" id="seed-weapons-result"></span>
         </div>
 
         <div class="tab-pane fade" id="tab-seed-challenges">
@@ -61,7 +61,7 @@
             (flags in descriptions); re-run skips existing names.
           </p>
           <button class="btn btn-secondary" id="btn-seed-challenges">Run: Seed test challenges</button>
-          <span class="ms-3 text-muted small" id="seed-challenges-result"></span>
+          <span class="ml-3 text-muted small" id="seed-challenges-result"></span>
         </div>
 
       </div>
@@ -194,7 +194,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editWeaponModalLabel">Edit Weapon</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
       </div>
       <div class="modal-body">
         <form id="edit-weapon-form">
@@ -265,8 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  const editModal = new bootstrap.Modal(document.getElementById('editWeaponModal'));
-
   document.querySelectorAll('.edit-weapon').forEach(function(btn) {
     btn.addEventListener('click', function() {
       const d = this.dataset;
@@ -276,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('edit-damage-type').value = d.damageType;
       document.getElementById('edit-min-damage').value  = d.minDamage;
       document.getElementById('edit-max-damage').value  = d.maxDamage;
-      editModal.show();
+      $('#editWeaponModal').modal('show');
     });
   });
 
@@ -318,11 +316,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const el = document.getElementById('seed-weapons-result');
       if (data.success) {
         el.textContent = `Done — ${data.data.created} created, ${data.data.updated} updated.`;
-        el.className = 'ms-3 small text-success';
+        el.className = 'ml-3 small text-success';
         location.reload();
       } else {
         el.textContent = data.error || 'Error';
-        el.className = 'ms-3 small text-danger';
+        el.className = 'ml-3 small text-danger';
       }
     });
   });
@@ -339,10 +337,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const el = document.getElementById('seed-challenges-result');
       if (data.success) {
         el.textContent = `Done — ${data.data.created} created, ${data.data.skipped} skipped.`;
-        el.className = 'ms-3 small text-success';
+        el.className = 'ml-3 small text-success';
       } else {
         el.textContent = data.error || 'Error';
-        el.className = 'ms-3 small text-danger';
+        el.className = 'ml-3 small text-danger';
       }
     });
   });
